@@ -47,7 +47,7 @@ def launch():
     instSelect.grid(row=0, columnspan=4, sticky='WE',
             padx=5, pady=5, ipadx=5, ipady=5)
 
-    INST_OPTIONS = ["Drums", "Guitar", "Bass", "Keys"]
+    INST_OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Rhythm", "Guitar Coop"]
 
     if instrument_id > len(INST_OPTIONS) - 1:
         instrument_id = 0

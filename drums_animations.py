@@ -10,6 +10,7 @@ global instrument_var
 global crashChkvar
 global softChkvar
 global flamChkvar
+global ghostChkvar
 global tolerance
 global form
 
@@ -20,6 +21,7 @@ def execute(a):
     global crashChkvar
     global softChkvar
     global flamChkvar
+    global ghostChkvar
     global tolerance
     global form
     
@@ -33,8 +35,9 @@ def execute(a):
     crash = crashChkvar.get()
     soft = softChkvar.get()
     flam = flamChkvar.get()
+    ghost = ghostChkvar.get()
     tolerance = tolerance.get()
-    C3toolbox.drums_animations(instrument, int(crash), int(soft), int(flam), grid, int(tolerance), 20, 0)
+    C3toolbox.drums_animations(instrument, int(crash), int(soft), int(flam), int(ghost), grid, int(tolerance), 20, 0)
     form.destroy()
 
 def launch():
@@ -44,6 +47,7 @@ def launch():
     global crashChkvar
     global softChkvar
     global flamChkvar
+    global ghostChkvar
     global tolerance
     global form
     form = Tkinter.Tk()
@@ -98,9 +102,15 @@ def launch():
                text="Make snare+Y toms flams", onvalue=1, offvalue=0, variable=flamChkvar)
     flamChk.grid(row=0, column=3, sticky='W', padx=5, pady=2)
     flamChk.select()
+
+    ghostChkvar = Tkinter.IntVar(helpLf)
+    ghostChk = Tkinter.Checkbutton(helpLf, \
+               text="Make vel. 1 snare soft hits", onvalue=1, offvalue=0, variable=ghostChkvar)
+    ghostChk.grid(row=1, column=3, sticky='W', padx=5, pady=2)
+    ghostChk.select()
     
     allBtn = Tkinter.Button(helpLf, text="Create animations", command= lambda: execute(0)) 
-    allBtn.grid(row=1, column=3, rowspan=1, sticky="WE", padx=5, pady=2)
+    allBtn.grid(row=2, column=3, rowspan=1, sticky="WE", padx=5, pady=2)
 
     logo = Tkinter.Frame(form, bg="#000")
     logo.grid(row=4, column=0, columnspan=3, sticky='WE', \

@@ -29,6 +29,7 @@ global keysvar
 global prokeysvar
 global drums2xvar
 global rhythmvar
+global coopvar
 
 def execute(selected):
     global beattrack_var
@@ -54,7 +55,7 @@ def execute(selected):
     global prokeysvar
     global drums2xvar
     global rhythmvar
-    
+    global coopvar
 
 
     #Polish
@@ -110,6 +111,9 @@ def execute(selected):
     rhythmvar = rhythmvar.get()
     if rhythmvar:
         instruments_todo.append("PART RHYTHM")
+    coopvar = coopvar.get()
+    if coopvar:
+        instruments_todo.append("PART GUITAR COOP")
     C3toolbox.startup()
     #C3toolbox.PM(instruments_todo)
     #C3toolbox.PM(str(polishvar) + " - " + str(grid) + " - " + str(tolerance) + " - " + str(invalidmarkersvar) + " - " + str(sustains_var) + " - " +
@@ -142,6 +146,7 @@ def launch():
     global prokeysvar
     global drums2xvar
     global rhythmvar
+    global coopvar
     
     form = Tkinter.Tk()
     form.wm_title('Auto clean-up')
@@ -304,6 +309,13 @@ def launch():
                    text="Rhythm", onvalue=1, offvalue=0, variable=rhythmvar)
         rhythmvarChk.grid(row=0, column=8, sticky='NS', padx=5, pady=2)
         rhythmvarChk.select()
+    coopvar = Tkinter.IntVar(instruments)
+    if C3toolbox.tracks_array["PART GUITAR COOP"] != 999:
+        
+        coopvarChk = Tkinter.Checkbutton(instruments, \
+                   text="Guitar Coop", onvalue=1, offvalue=0, variable=coopvar)
+        coopvarChk.grid(row=0, column=9, sticky='NS', padx=5, pady=2)
+        coopvarChk.select()
         
     proceed = Tkinter.LabelFrame(form, text=" Execute (all difficulty levels of selected instruments will be processed): ")
     proceed.grid(row=4, column=1, columnspan=8, sticky='WE', \

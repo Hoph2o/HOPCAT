@@ -75,7 +75,8 @@ tracks_array = { "PART DRUMS" : 999,
                  "PART REAL_GUITAR": 999,
                  "PART REAL_GUITAR_22": 999,
                  "PART REAL_BASS": 999,
-                 "PART REAL_BASS_22": 999
+                 "PART REAL_BASS_22": 999,
+                 "PART GUITAR COOP": 999,
                  }
 array_instruments = {
         "Drums" : "PART DRUMS",
@@ -92,7 +93,8 @@ array_instruments = {
         "Pro Guitar" : "PART REAL_GUITAR",
         "Pro Guitar (22)" : "PART REAL_GUITAR_22",
         "Pro Bass" : "PART REAL_BASS",
-        "Pro Bass (22)" : "PART REAL_BASS_22"
+        "Pro Bass (22)" : "PART REAL_BASS_22",
+        "Guitar Coop" : "PART GUITAR COOP"
         }
 
 array_dropdownid = { "PART DRUMS" : 0,
@@ -110,7 +112,8 @@ array_dropdownid = { "PART DRUMS" : 0,
                      "PART REAL_GUITAR": 8,
                      "PART REAL_GUITAR_22": 9,
                      "PART REAL_BASS": 10,
-                     "PART REAL_BASS_22": 11
+                     "PART REAL_BASS_22": 11,
+                     "PART GUITAR COOP": 12
                  }
 
 array_dropdownvocals = { "PART VOCALS" : 0,
@@ -128,7 +131,8 @@ array_partlyrics = { "PART VOCALS" : "vocals",
 array_dropdownid_chords = { "PART GUITAR" : 0,
                      "PART BASS" : 1,
                      "PART KEYS" : 2,
-                     "PART RHYTHM": 3
+                     "PART RHYTHM": 3,
+                     "PART GUITAR COOP": 4
                  }
 array_levels = { "Expert" : ["x", "_X"], "Hard" : ["h", "_H"], "Medium" : ["m", "_M"], "Easy" : ["e", "_E"] }
 array_levels_id = { 'x' : 0, 'h' : 1, 'm' : 2, 'e' : 3 }
@@ -454,8 +458,6 @@ def get_trackid(): #Returns the id for the currently selected track
 
         if "DRUMS" in source and source != "PART DRUMS":
             source = "PART DRUMS 2X"
-        elif "RHYTHM" in source:
-            source = "PART RHYTHM"
         elif source == "PART REAL _KEYS_H":
             source = "PART REAL_KEYS_H"
 
@@ -825,7 +827,11 @@ def prep_tracks():
         elif "PART REAL_BASS" == trackname:
             tracks_array["PART REAL_BASS"] = i  
         elif "PART REAL_BASS_22" == trackname:
-            tracks_array["PART REAL_BASS_22"] = i          
+            tracks_array["PART REAL_BASS_22"] = i
+        elif "PART RHYTHM" == trackname:
+            tracks_array["PART RHYTHM"] = i          
+        elif "PART GUITAR COOP" == trackname:
+            tracks_array["PART GUITAR COOP"] = i          
         else:
             instrument = "???"
     #PM("\ntracks_array:\n")
@@ -1387,7 +1393,7 @@ def remove_notes_pg(what,level,instrument,how,selected):
     array_notes = add_objects(array_notes, array_tempnotes)
     write_midi(instrument, [array_notes, array_notesevents[1]], end_part, start_part)
 
-def remove_notes(what,level,instrument,how,same,sparse,bend,selected):
+def remove_notes(what,level,instrument,how,same,sparse,bend,opens_to_green,selected):
     #PM("\n\n"+what+" - "+level+" - "+instrument+" - "+str(how)+" - "+str(same)+" - "+str(sparse)+" - "+str(bend)+" - "+str(selected)+"\n\n")
     #w/h/q/e, whole, half, quarter, eighth grid
     #x/h/m/e, expert, hard, medium, easy
@@ -1444,6 +1450,8 @@ def remove_notes(what,level,instrument,how,same,sparse,bend,selected):
             invalid_note_mb(note, instrumentname)
             return
         if notes_dict[note[2]][1] == level and (selected == 0 or (selected and (this_measure >= first_measure and this_measure <= last_measure))):
+            if notes_dict[note[2]][2] == "P" and opens_to_green: #if opens to green is enabled and note is an open note...
+                note[2] += 1 #move note one semitone up, to green
             array_validnotes.append(note)
         else:
             array_notes.append(note)
@@ -1925,7 +1933,7 @@ def remove_kick(instrument,level, what, selected):
     array_notes = add_objects(array_notes, array_temp)
     write_midi(instrument, [array_notes, array_notesevents[1]], end_part, start_part)
 
-def single_pedal(level, how, selected):
+def single_pedal(level, how, move, selected):
     global maxlen
     global double_pedal_bpm
     instrument = tracks_array['PART DRUMS']
@@ -2068,6 +2076,10 @@ def single_pedal(level, how, selected):
         note = array_validnotes[x]
         if note[1] not in array_notestoremove:
             array_notes.append(note)
+        elif move: 
+            note[2] -= 1 #move to x+ kick
+            array_notes.append(note)
+
     #Use the remove_notes criteria and keep only notes on a 1/8th grid for those sections
     write_midi(instrument, [array_notes, array_notesevents[1]], end_part, start_part)
     
@@ -2484,7 +2496,7 @@ def simplify_roll(instrument, level, selected):
 
     write_midi(instrument, [array_temp, array_notesevents[1]], end_part, start_part)
 
-def drums_animations(instrument, crash, soft, flam, grid, cymbals, how, mute):
+def drums_animations(instrument, crash, soft, flam, ghost, grid, cymbals, how, mute):
 
     #instrument (PART DRUMS)
     #crash: 0 for CRASH2 default crash, 1 for CRASH1 default crash
@@ -2555,6 +2567,10 @@ def drums_animations(instrument, crash, soft, flam, grid, cymbals, how, mute):
             if(pitch == 100 and crash): #CRASH1 option
                 pitch = 104
             new_note[2] = drumsanimations_array[pitch][soft]
+            if(pitch == 97 and ghost): #ghost snare option
+                velocity = int(str(note[3]), 16)
+                if velocity == 1: #if it's a ghost...
+                    new_note[2] += 2 #move anim note 2 semitones up
             array_notes.append(new_note)
             
     #Flip disco sections putting snare on the right hand
@@ -4928,15 +4944,16 @@ def reduce_5lane(instrument, levels, hard, medium, easy, chords, reduceChords, r
         if (instrument == 'PART DRUMS' or instrument == 'PART DRUMS 2X') and  unflip == 'h':
             unflip_discobeat(instrument, 'h', 20, 0)
         
-        #remove_notes using 1/8th grid, sparse, pitch bend
+        #remove_notes using 1/8th grid, sparse, pitch bend, move opens to green
         pitchbend = hard[3]
+        opens_to_green = hard[4]
         if instrument == 'PART DRUMS' or instrument == 'PART DRUMS 2X':
             pitchbend = 0
-
+            opens_to_green = 0
         if (instrument == 'PART GUITAR' or instrument == 'PART BASS' or instrument == 'PART KEYS' or instrument == 'PART RHYTHM') and reduceChords:
             reduce_chords(instrument, 'h', chords[2], 0)
         
-        remove_notes(hard[0],'h',instrument,tolerance,hard[1],hard[2],pitchbend,0)
+        remove_notes(hard[0],'h',instrument,tolerance,hard[1],hard[2],pitchbend,opens_to_green,0)
 
         #Run simplify_roll
         simplify_roll(instrument, 'h', 0)
@@ -5006,12 +5023,14 @@ def reduce_5lane(instrument, levels, hard, medium, easy, chords, reduceChords, r
         if medium[3] == 1 and (instrument == 'PART DRUMS' or instrument == 'PART DRUMS 2X'):
             remove_kick(instrument, 'm', 'p', 0)
 
-        #remove_notes using 1/4th grid, consecutive notes, sparse
+        #remove_notes using 1/4th grid, consecutive notes, sparse, move opens to green
         pitchbend = medium[3]
+        opens_to_green = medium[4]
         if instrument == 'PART DRUMS' or instrument == 'PART DRUMS 2X':
             pitchbend = 0
+            opens_to_green = 0
 
-        remove_notes(medium[0],'m',instrument,tolerance,medium[1],medium[2],pitchbend,0)
+        remove_notes(medium[0],'m',instrument,tolerance,medium[1],medium[2],pitchbend,opens_to_green,0)
 
         if (instrument == 'PART GUITAR' or instrument == 'PART BASS' or instrument == 'PART KEYS' or instrument == 'PART RHYTHM') and reduceNotes:
             reduce_singlenotes(instrument, 'm', 0)
@@ -5089,10 +5108,12 @@ def reduce_5lane(instrument, levels, hard, medium, easy, chords, reduceChords, r
 
         #remove_notes using 1/2nd grid, consecutive notes, sparse
         pitchbend = easy[3]
+        opens_to_green = easy[4]
         if instrument == 'PART DRUMS' or instrument == 'PART DRUMS 2X':
             pitchbend = 0
+            opens_to_green = 0
 
-        remove_notes(easy[0],'e',instrument,tolerance,easy[1],easy[2],pitchbend,0)
+        remove_notes(easy[0],'e',instrument,tolerance,easy[1],easy[2],pitchbend,opens_to_green,0)
 
         if (instrument == 'PART GUITAR' or instrument == 'PART BASS' or instrument == 'PART KEYS' or instrument == 'PART RHYTHM') and reduceNotes:
             reduce_singlenotes(instrument, 'e', 0)
@@ -5111,12 +5132,12 @@ def reduce_5lane(instrument, levels, hard, medium, easy, chords, reduceChords, r
 
         fix_sustains(instrument, 'e', 1, 0) #instrument, level, fix, selected
 
-def auto_animations(beattrack, expression, pause, grid, crash, soft, flam, tolerance, keys, mutevar):
+def auto_animations(beattrack, expression, pause, grid, crash, soft, flam, ghost, tolerance, keys, mutevar):
     #Create the BEAT track
     create_beattrack(beattrack, 0)
 
     #Add animations markers
-    array_anims = ["PART DRUMS", "PART GUITAR", "PART BASS", "PART VOCALS", "PART KEYS", "PART REAL_KEYS_X", "PART DRUMS 2X", "PART RHYTHM"]
+    array_anims = ["PART DRUMS", "PART GUITAR", "PART BASS", "PART VOCALS", "PART KEYS", "PART REAL_KEYS_X", "PART DRUMS 2X", "PART RHYTHM", "PART GUITAR COOP"]
     for x in range(0, len(array_anims)):
         if tracks_array[array_anims[x]] != 999:
             create_animation_markers(array_anims[x], expression, pause, mutevar)
@@ -5125,7 +5146,7 @@ def auto_animations(beattrack, expression, pause, grid, crash, soft, flam, toler
     array_drumsanims = ["PART DRUMS", "PART DRUMS 2X"]
     for x in range(0, len(array_drumsanims)):
         if tracks_array[array_drumsanims[x]] != 999:
-            drums_animations(str(array_drumsanims[x]), int(crash), int(soft), int(flam), str(grid), int(tolerance), 10, int(mutevar))
+            drums_animations(str(array_drumsanims[x]), int(crash), int(soft), int(flam), int(ghost), str(grid), int(tolerance), 10, int(mutevar))
 
     if keys == 1 and tracks_array['PART REAL_KEYS_X'] != 999:
         create_keys_animations()

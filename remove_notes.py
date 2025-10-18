@@ -11,6 +11,7 @@ global fldRowTxt
 global level_var
 global grid_var
 global bendChkvar
+global opensChkvar
 global sameChkvar
 global sparseChkvar
 
@@ -26,6 +27,7 @@ def execute(sel):
     level = str(level_var.get())
     grid = str(grid_var.get())
     bend = str(bendChkvar.get())
+    opens_to_green = str(opensChkvar.get())
     same = str(sameChkvar.get())
     sparse = str(sparseChkvar.get())
     if instrument == "PART REAL_KEYS":
@@ -35,7 +37,7 @@ def execute(sel):
     #RPR_ShowConsoleMsg(instrument+" - "+level+" - "+grid+" - "+tolerance+" - "+bend+" - "+same+" - "+sparse)
     C3toolbox.startup()
     
-    C3toolbox.remove_notes(array_grid[grid],C3toolbox.array_levels[level][0],instrument,int(tolerance),int(same),int(sparse),int(bend),int(sel))
+    C3toolbox.remove_notes(array_grid[grid],C3toolbox.array_levels[level][0],instrument,int(tolerance),int(same),int(sparse),int(bend),int(opens_to_green),int(sel))
     #(what,level,instrument,how,same,sparse,bend,selected)
     #C3toolbox.remove_notes('q', 'x', '', 10, 0, 0, 0, 0)
     form.destroy()
@@ -46,6 +48,7 @@ def launch():
     global level_var
     global grid_var
     global bendChkvar
+    global opensChkvar
     global sameChkvar
     global sparseChkvar
     global form
@@ -77,10 +80,10 @@ def launch():
     inFileLbl = Tkinter.Label(stepOne, text="Select instrument")
     inFileLbl.grid(row=0, column=0, sticky='E', padx=5, pady=2)
     
-    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm", "Pro Guitar", "Pro Guitar (22)", "Pro Bass", "Pro Bass (22)"]
+    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm", "Pro Guitar", "Pro Guitar (22)", "Pro Bass", "Pro Bass (22)", "Guitar Coop"]
 
     # Pro guitar/bass IDs
-    if instrument_id in range(8,11+1):
+    if instrument_id in range(8,13):
         instrument_id -= 1
 
     if instrument_id > len(OPTIONS) - 1: instrument_id = 0
@@ -146,7 +149,12 @@ def launch():
     bendChkvar = Tkinter.IntVar(stepThree)
     bendChk = Tkinter.Checkbutton(stepThree, \
                text="Enable pitch bend detection", onvalue=1, offvalue=0, variable=bendChkvar)
-    bendChk.grid(row=3, column=3, sticky='W', padx=5, pady=2)
+    bendChk.grid(row=4, column=1, sticky='W', padx=5, pady=2)
+
+    opensChkvar = Tkinter.IntVar(stepThree)
+    opensChk = Tkinter.Checkbutton(stepThree, \
+               text="Move open notes to green", onvalue=1, offvalue=0, variable=opensChkvar)
+    opensChk.grid(row=4, column=2, sticky='W', padx=5, pady=2)
 
 
     # HELP

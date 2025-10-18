@@ -62,7 +62,9 @@ def launch():
     inFileLbl = Tkinter.Label(helpLf, text="Select instrument")
     inFileLbl.grid(row=1, column=1, sticky='E', padx=5, pady=2)
 
-    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm"]
+    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm", "Guitar Coop"]
+    if (instrument_id == 12): instrument_id = 7
+    elif (instrument_id >= len(OPTIONS)): instrument_id = 0
 
     instrument_var = Tkinter.StringVar(helpLf)
     instrument_var.set(OPTIONS[instrument_id]) # default value

@@ -21,6 +21,9 @@ global sparseChkvar_e
 global chordsChkvar_h
 global chordsChkvar_m
 global chordsChkvar_e
+global opensChkvar_h
+global opensChkvar_m
+global opensChkvar_e
 global reduceChordsvar
 global reduceNotesvar
 global mutevar
@@ -56,6 +59,9 @@ def execute(selected):
     global chordsChkvar_h
     global chordsChkvar_m
     global chordsChkvar_e
+    global opensChkvar_h
+    global opensChkvar_m
+    global opensChkvar_e
     global reduceChordsvar
     global reduceNotesvar
     global mutevar
@@ -88,6 +94,9 @@ def execute(selected):
     chordsChkvar_e = chordsChkvar_e.get()
     chordsChkvar_m = chordsChkvar_m.get()
     chordsChkvar_h = chordsChkvar_h.get()
+    opensChkvar_e = opensChkvar_e.get()
+    opensChkvar_m = opensChkvar_m.get()
+    opensChkvar_h = opensChkvar_h.get()
     reduceChordsvar = reduceChordsvar.get()
     reduceNotesvar = reduceNotesvar.get()
     snareh_var = snareh_var.get()
@@ -103,9 +112,9 @@ def execute(selected):
         
     C3toolbox.startup()
     C3toolbox.reduce_5lane(instrument, [lvlHardvar, lvlMediumvar, lvlEasyvar], \
-                           [grid_var_h, sameChkvar_h, sparseChkvar_h, bendChkvar_h], \
-                           [grid_var_m, sameChkvar_m, sparseChkvar_m, bendChkvar_m], \
-                           [grid_var_e, sameChkvar_e, sparseChkvar_e, bendChkvar_e], \
+                           [grid_var_h, sameChkvar_h, sparseChkvar_h, bendChkvar_h, opensChkvar_h], \
+                           [grid_var_m, sameChkvar_m, sparseChkvar_m, bendChkvar_m, opensChkvar_m], \
+                           [grid_var_e, sameChkvar_e, sparseChkvar_e, bendChkvar_e, opensChkvar_e], \
                            [chordsChkvar_e, chordsChkvar_m, chordsChkvar_h], \
                            reduceChordsvar, reduceNotesvar, \
                            [what_array[snareh_var], what_array[snarem_var], what_array[snaree_var]], \
@@ -137,6 +146,9 @@ def launch(instrument):
     global chordsChkvar_h
     global chordsChkvar_m
     global chordsChkvar_e
+    global opensChkvar_h
+    global opensChkvar_m
+    global opensChkvar_e
     global reduceChordsvar
     global reduceNotesvar
     global snareh_var
@@ -207,12 +219,17 @@ def launch(instrument):
         bendChk_h.select()
 
     chordsChkvar_h = Tkinter.IntVar(lvlHard)
+    opensChkvar_h = Tkinter.IntVar(lvlHard)
 
     if instrument_id != 0 and instrument_id != 5:
         chordsChk_h = Tkinter.Checkbutton(lvlHard, \
                text="If reducing chords, enable use of GB and RO when translating from 3-note chords", onvalue=1, offvalue=0, variable=chordsChkvar_h)
         chordsChk_h.grid(row=1, column=2, columnspan=6, sticky='W', padx=5, pady=2)
         chordsChk_h.select()
+
+        opensChk_h = Tkinter.Checkbutton(lvlHard, \
+               text="Move opens to green", onvalue=1, offvalue=0, variable=opensChkvar_h)
+        opensChk_h.grid(row=2, column=2, columnspan=6, sticky='W', padx=5, pady=2)
     elif instrument_id == 0 or instrument_id == 5:
         snarehLbl = Tkinter.Label(lvlHard, \
                            text="Leave only a snare hit when coupled with:")
@@ -277,11 +294,17 @@ def launch(instrument):
         bendChk_m.select()
     
     chordsChkvar_m = Tkinter.IntVar(lvlMedium)
+    opensChkvar_m = Tkinter.IntVar(lvlMedium)
     if instrument_id != 0 and instrument_id != 5:
         chordsChk_m = Tkinter.Checkbutton(lvlMedium, \
                text="If reducing chords, enable use of BO chords", onvalue=1, offvalue=0, variable=chordsChkvar_m)
         chordsChk_m.grid(row=2, column=2, columnspan=6, sticky='W', padx=5, pady=2)
         chordsChk_m.select()
+
+        opensChk_m = Tkinter.Checkbutton(lvlMedium, \
+               text="Move opens to green", onvalue=1, offvalue=0, variable=opensChkvar_m)
+        opensChk_m.grid(row=3, column=2, columnspan=6, sticky='W', padx=5, pady=2)
+        opensChk_m.select()
     elif instrument_id == 0 or instrument_id == 5:
         snaremLbl = Tkinter.Label(lvlMedium, \
                            text="Leave only a snare hit when coupled with:")
@@ -346,11 +369,17 @@ def launch(instrument):
         bendChk.select()
 
     chordsChkvar_e = Tkinter.IntVar(lvlEasy)
+    opensChkvar_e = Tkinter.IntVar(lvlEasy)
     if instrument_id != 0 and instrument_id != 5:
         chordsChk_e = Tkinter.Checkbutton(lvlEasy, \
                    text="If reducing chords, keep the occasional B and O notes", onvalue=1, offvalue=0, variable=chordsChkvar_e)
         chordsChk_e.grid(row=4, column=2, columnspan=6, sticky='W', padx=5, pady=2)
         chordsChk_e.select()
+
+        opensChk_e = Tkinter.Checkbutton(lvlEasy, \
+               text="Move opens to green", onvalue=1, offvalue=0, variable=opensChkvar_e)
+        opensChk_e.grid(row=5, column=2, columnspan=6, sticky='W', padx=5, pady=2)
+        opensChk_e.select()
     elif instrument_id == 0 or instrument_id == 5:
         snareeLbl = Tkinter.Label(lvlEasy, \
                            text="Leave only a snare hit when coupled with:")
@@ -380,8 +409,9 @@ def launch(instrument):
     tolerance.config(width=5)
     tolerance.grid(row=0, column=2, padx=5, pady=2, sticky='W')
 
-    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm"]
-    
+    OPTIONS = ["Drums", "Guitar", "Bass", "Keys", "Pro Keys", "2x Drums", "Rhythm", "Guitar Coop"]
+    if (instrument_id == 12): instrument_id = 7
+    elif (instrument_id >= len(OPTIONS)): instrument_id = 0
 
     instrument_var = Tkinter.StringVar(Options_grid)
     instrument_var.set(OPTIONS[instrument_id]) # default value

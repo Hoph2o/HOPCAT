@@ -1,7 +1,6 @@
 # CAT 1.3.0
 from reaper_python import *
 import C3toolbox
-import C4toolbox
 import create_beattrack
 import create_animation_markers
 import filter_notes
@@ -31,7 +30,6 @@ import create_phrase_markers
 import trim_phrase_markers
 import compact_harmonies
 import add_vocalsoverdrive
-import add_overdrive
 import fix_textevents
 import cleanup_phrases
 import compound_phrases
@@ -51,6 +49,7 @@ import pg_copy_od_solo
 import remove_notes_pg
 import create_singalong
 import reduce_by_pattern
+import create_ini
 
 import os
 import sys
@@ -141,10 +140,8 @@ if __name__ == '__main__':
     reducepatternBtn.grid(row=3, column=1, columnspan=1, sticky="WE", padx=5, pady=2)
     
     prokeysreduceBtn = Tkinter.Button(sec5lane, text="Reduce pro keys note density based on 5-lane", command= lambda: execute_this('remove_notes_prokeys')) 
-    prokeysreduceBtn.grid(row=3, column=2, columnspan=2, sticky="WE", padx=5, pady=2)
-
-    overdriveBtn = Tkinter.Button(sec5lane, text="Add Overdrive", command=lambda: execute_this('add_overdrive'))
-    overdriveBtn.grid(row=3, column=4, columnspan=2, sticky="WE", padx=5, pady=2)
+    prokeysreduceBtn.grid(row=3, column=2, columnspan=3, sticky="WE", padx=5, pady=2)
+    
 
     secDrums = Tkinter.LabelFrame(root, text=" Drums: ")
     secDrums.grid(row=2, columnspan=5, sticky='WE', \
@@ -257,12 +254,16 @@ if __name__ == '__main__':
 
     ReduceFromBasicGtrBtn = Tkinter.Button(secPGB, text="Reduce from 5-lane", command= lambda: execute_this("remove_notes_pg"))
     ReduceFromBasicGtrBtn.grid(row=1, column=4, rowspan=1, sticky="WE", padx=5, pady=2)
+
     secValidation = Tkinter.LabelFrame(root, text=" Validation: ")
     secValidation.grid(row=6, columnspan=5, sticky='WE', \
                  padx=5, pady=5, ipadx=5, ipady=5)
 
     CARVBtn = Tkinter.Button(secValidation, text="Run C3 Automatic Rules Validator (CARV)", command=RunCARV )
     CARVBtn.grid(row=1, column=1, rowspan=1, sticky="WE", padx=5, pady=2)
+
+    INIBtn = Tkinter.Button(secValidation, text="Create .ini", command= lambda: execute_this("create_ini"))
+    INIBtn.grid(row=1, column=2, rowspan=1, sticky="WE", padx=5, pady=2)
 
     logo = Tkinter.Frame(root, bg="#000")
     logo.grid(row=9, column=0, columnspan=10, sticky='WE', \

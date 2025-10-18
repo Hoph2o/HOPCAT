@@ -50,7 +50,7 @@ def launch():
     helpLf = Tkinter.Frame(form)
     helpLf.grid(row=0, column=1, sticky='NS', padx=5, pady=5)
 
-    OPTIONS = ["Guitar", "Bass", "Keys", "Rhythm"]
+    OPTIONS = ["Guitar", "Bass", "Keys", "Rhythm", "Guitar Coop"]
 
     instrument_var = Tkinter.StringVar(helpLf)
     instrument_var.set(OPTIONS[instrument_id]) # default value

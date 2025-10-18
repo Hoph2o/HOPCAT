@@ -11,6 +11,7 @@ global instrument_var
 global crashChkvar
 global softChkvar
 global flamChkvar
+global ghostChkvar
 global tolerance
 global form
 global expression_var
@@ -26,6 +27,7 @@ def execute(selected):
     global crashChkvar
     global softChkvar
     global flamChkvar
+    global ghostChkvar
     global tolerance
     global form
     global expression_var
@@ -46,6 +48,7 @@ def execute(selected):
     crash = crashChkvar.get()
     soft = softChkvar.get()
     flam = flamChkvar.get()
+    ghost = ghostChkvar.get()
     keysvar = int(keysvar.get())
     tolerance = tolerance.get()
     if tolerance == '':
@@ -61,7 +64,7 @@ def execute(selected):
     
     #C3toolbox.PM(str(beattrack) + " - " + str(expression) + " - " + str(pause) + " - " + str(grid) + " - " + str(crash) + " - " + str(soft) + " - " + str(flam) + " - " + str(tolerance) + " - " + str(mutevar))
     C3toolbox.startup()
-    C3toolbox.auto_animations(beattrack, expression, pause, grid, crash, soft, flam, tolerance, keysvar, mutevar)
+    C3toolbox.auto_animations(beattrack, expression, pause, grid, crash, soft, flam, ghost, tolerance, keysvar, mutevar)
     form.destroy()
 
 def launch():
@@ -71,6 +74,7 @@ def launch():
     global crashChkvar
     global softChkvar
     global flamChkvar
+    global ghostChkvar
     global tolerance
     global form
     global expression_var
@@ -173,8 +177,14 @@ def launch():
     flamChk.grid(row=2, column=2, sticky='W', padx=5, pady=2)
     flamChk.select()
 
+    ghostChkvar = Tkinter.IntVar(drumsanim)
+    ghostChk = Tkinter.Checkbutton(drumsanim, \
+               text="Make vel. 1 snare soft hits", onvalue=1, offvalue=0, variable=ghostChkvar)
+    ghostChk.grid(row=2, column=3, sticky='W', padx=5, pady=2)
+    ghostChk.select()
+
     allBtn = Tkinter.Button(drumsanim, text="Create animations", command= lambda: execute(0)) 
-    allBtn.grid(row=2, column=3, sticky="WE", padx=5, pady=2)
+    allBtn.grid(row=3, column=3, sticky="WE", padx=5, pady=2)
     
     logo = Tkinter.Frame(form, bg="#000")
     logo.grid(row=5, column=0, columnspan=10, sticky='WE', \
