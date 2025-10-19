@@ -784,54 +784,54 @@ def prep_tracks():
         
         #CYCLING THROUGH ALL TRACKS TO FIND THOSE RELEVANT
         #This check needs to go off everytime a command is issued because if the user changes position of the tracks the IDs change
-        if "PART BASS" == trackname:
+        if "PART BASS" == trackname or "BASS" == trackname:
             tracks_array["PART BASS"] = i
         elif "PART DRUMS 2X" == trackname or "PART DRUMS 2x" == trackname or "PART DRUMS_2x" == trackname or "PART DRUMS_2X" == trackname:
             tracks_array["PART DRUMS 2X"] = i
-        elif "PART DRUMS" == trackname:
+        elif "PART DRUMS" == trackname or "DRUMS" == trackname:
             tracks_array["PART DRUMS"] = i
-        elif "PART GUITAR" == trackname:
+        elif "PART GUITAR" == trackname or "GUITAR" == trackname:
             tracks_array["PART GUITAR"] = i
-        elif "PART VOCALS" == trackname:
+        elif "PART VOCALS" == trackname or "VOCALS" == trackname:
             tracks_array["PART VOCALS"] = i
-        elif "PART KEYS" == trackname:
+        elif "PART KEYS" == trackname or "KEYS" == trackname:
             tracks_array["PART KEYS"] = i
-        elif "KEYS_X" in trackname:
+        elif "PART REAL_KEYS_X" == trackname or "KEYS_X" in trackname:
             tracks_array["PART REAL_KEYS_X"] = i
-        elif "KEYS_H" in trackname:
+        elif "PART REAL_KEYS_H" == trackname or "KEYS_H" in trackname:
             tracks_array["PART REAL_KEYS_H"] = i
-        elif "KEYS_M" in trackname:
+        elif "PART REAL_KEYS_M" == trackname or "KEYS_M" in trackname:
             tracks_array["PART REAL_KEYS_M"] = i
-        elif "KEYS_E" in trackname:
+        elif "PART REAL_KEYS_E" == trackname or "KEYS_E" in trackname:
             tracks_array["PART REAL_KEYS_E"] = i
         elif "PART KEYS_ANIM_RH" == trackname:
             tracks_array["PART KEYS_ANIM_RH"] = i
         elif "PART KEYS_ANIM_LH" == trackname:
-            tracks_array["PART KEYS_ANIM_LH"] = i   
-        elif "HARM1" == trackname:
+            tracks_array["PART KEYS_ANIM_LH"] = i
+        elif "PART HARM1" == trackname or "HARM1" == trackname:
             tracks_array["HARM1"] = i
-        elif "HARM2" == trackname:
+        elif "PART HARM2" == trackname or "HARM2" == trackname:
             tracks_array["HARM2"] = i
-        elif "HARM3" == trackname:
+        elif "PART HARM3" == trackname or "HARM3" == trackname:
             tracks_array["HARM3"] = i
         elif "EVENTS" == trackname:
             tracks_array["EVENTS"] = i
         elif "BEAT" == trackname:
             tracks_array["BEAT"] = i
         elif "VENUE" == trackname:
-            tracks_array["VENUE"] = i  
+            tracks_array["VENUE"] = i
         elif "PART REAL_GUITAR" == trackname:
             tracks_array["PART REAL_GUITAR"] = i
         elif "PART REAL_GUITAR_22" == trackname:
             tracks_array["PART REAL_GUITAR_22"] = i
         elif "PART REAL_BASS" == trackname:
-            tracks_array["PART REAL_BASS"] = i  
+            tracks_array["PART REAL_BASS"] = i
         elif "PART REAL_BASS_22" == trackname:
             tracks_array["PART REAL_BASS_22"] = i
         elif "PART RHYTHM" == trackname:
-            tracks_array["PART RHYTHM"] = i          
+            tracks_array["PART RHYTHM"] = i
         elif "PART GUITAR COOP" == trackname:
-            tracks_array["PART GUITAR COOP"] = i          
+            tracks_array["PART GUITAR COOP"] = i
         else:
             instrument = "???"
     #PM("\ntracks_array:\n")
