@@ -80,7 +80,7 @@ class NoteSelectorUI(object):
         except Exception:
             pass
         self.root.lift()
-        self._arm_topmost_watchdog()
+        #self._arm_topmost_watchdog()
 
         pad = {"padx": 6, "pady": 1}
 
@@ -123,7 +123,7 @@ class NoteSelectorUI(object):
         self._center_window(width=300, height=160)
 
         # Keep topmost when clicking elsewhere
-        self.root.bind("<FocusOut>", self._reassert_topmost)
+        #self.root.bind("<FocusOut>", self._reassert_topmost)
 
     def _center_window(self, width=300, height=160):
         self.root.update_idletasks()
@@ -133,21 +133,21 @@ class NoteSelectorUI(object):
         y = int((sh - height) / 2)
         self.root.geometry("{}x{}+{}+{}".format(width, height, x, y))
 
-    def _arm_topmost_watchdog(self):
-        def _tick():
-            try:
-                self.root.attributes("-topmost", True)
-                self.root.lift()
-            finally:
-                self.root.after(500, _tick)
-        self.root.after(500, _tick)
+    #def _arm_topmost_watchdog(self):
+        #def _tick():
+            #try:
+                #self.root.attributes("-topmost", True)
+                #self.root.lift()
+            #finally:
+                #self.root.after(500, _tick)
+        #self.root.after(500, _tick)
 
-    def _reassert_topmost(self, _evt=None):
-        try:
-            self.root.attributes("-topmost", True)
-            self.root.lift()
-        except Exception:
-            pass
+    #def _reassert_topmost(self, _evt=None):
+        #try:
+            #self.root.attributes("-topmost", True)
+            #self.root.lift()
+        #except Exception:
+            #pass
 
     @staticmethod
     def _ordinal(n):
@@ -187,7 +187,7 @@ class NoteSelectorUI(object):
             step = int(self.var_step.get())
             offset = int(self.var_offset.get())
             apply_selection(step, offset)
-            self._reassert_topmost()
+            #self._reassert_topmost()
             try:
                 self.root.focus_force()
             except Exception:
