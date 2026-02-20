@@ -1,4 +1,4 @@
-# HOPCAT
+# HOPCAT v0.4
 This fork was created to further add to CAT and the work done with CAT-YARG
 
 https://github.com/abefacciazzi/CAT
@@ -6,15 +6,20 @@ https://github.com/abefacciazzi/CAT
 https://github.com/raphaelgoulart/CAT-YARG
 
 # New Features
-create_ini - A Moonscraper-esque metadate input window to generate a song.ini file directly from REAPER.
-Additional track name compatibility (see below)
+- create_ini - A Moonscraper-esque metadate input window to generate a song.ini file directly from REAPER.
+- midi_note_selector - Based off a ReaPack script by Lokasenna. Replaces CAT function like "Reduce 2x" and "Reduce to triple hits"
+- New UI - Complete overhaul with favorites page and QOL features
+- Additional track name compatibility (see below)
 
 # Installation
-- Install python 2.7.12 (https://www.python.org/downloads/release/python-2712/)
+- Install python 3 (https://www.python.org/downloads/)
 - Enable ReaScript in REAPER (Options>Preferences>ReaScript)
-- In this window you should see "Python: python27.dll is installed"
+- Unlike python 2, you'll probably need to manually point REAPER to your python folder
+- Custom path to python dll directory: should be located at **AppData\Local\Programs\Python\Python314** (or whatever version of python you install)
+- Force ReaScript to use specific python .dll: **python314** (there's also a file named python3. make sure you're using the file "python + version number")
+- You should see "Python: python314.dll is installed" if successful
 - Go to Actions>Show action list>New action>Load ReaScript
-- Navigate to you HOPCAT folder and select "CAT.py"
+- Navigate to your HOPCAT folder and select "CAT.py"
 - Run "CAT.py" in REAPER
 
 # Important Notes
@@ -41,7 +46,7 @@ on the drum track now as note 95)
 - PART REAL_GUITAR_22
 - PART REAL_BASS
 - PART REAL_BASS_22
-- PART RHYTHM
+- PART RHYTHM *or* RHYTHM
 - PART GUITAR COOP
 - EVENTS
 - BEAT

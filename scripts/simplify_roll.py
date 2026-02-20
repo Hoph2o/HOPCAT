@@ -1,0 +1,107 @@
+from __future__ import absolute_import
+from reaper_python import *
+import C3toolbox
+import sys
+import os
+sys.argv=["Main"]
+import tkinter
+
+global level_var
+global instrument_var
+global form
+
+CAT_LABEL = "Fix trills/rolls"
+CAT_CATEGORY = "5-Lane / Drums"
+CAT_ORDER = 1
+
+def execute(selected):
+    level = str(level_var.get())
+    instrument = str(instrument_var.get())
+    instrument = C3toolbox.array_instruments[instrument]
+
+    if instrument == "PART REAL_KEYS":
+        instrument = instrument + C3toolbox.array_levels[level][1]
+    C3toolbox.startup()
+    C3toolbox.simplify_roll(instrument, C3toolbox.array_levels[level][0], selected)
+    #instrument, level, selected, mute (when set to 1, does NOT flip sections that appear
+    # to be already flipped without prompting user (used in automatic fixing scripts)
+
+    form.destroy()
+
+def launch():
+    global form
+    global level_var
+    global instrument_var
+
+    C3toolbox.startup()
+    form = tkinter.Tk()
+    form.wm_title('Simplify rolls/trills/swells')
+
+    instrument_name = C3toolbox.get_trackname()
+
+    if instrument_name in C3toolbox.array_dropdownid:
+        instrument_id = C3toolbox.array_dropdownid[instrument_name]
+    else:
+        instrument_id = 0
+
+    instrument_track = C3toolbox.get_trackid()
+    array_instrument_data = C3toolbox.process_instrument(instrument_track)
+    array_instrument_notes = array_instrument_data[1]
+    array_notesevents = C3toolbox.create_notes_array(array_instrument_notes)
+    curlevel = C3toolbox.level(array_notesevents[0], instrument_track)
+    if curlevel is None:
+        form.destroy()
+        return
+    
+    helpLf = tkinter.Frame(form)
+    helpLf.grid(row=0, column=1, sticky='NS', padx=5, pady=5)
+
+    inFileLbl = tkinter.Label(helpLf, text="Select instrument")
+    inFileLbl.grid(row=1, column=1, sticky='E', padx=5, pady=2)
+
+    OPTIONS = ["Guitar", "Rhythm", "Bass", "Drums", "Keys", "Pro Keys"]
+    if (instrument_id == 12): instrument_id = 7
+    elif (instrument_id >= len(OPTIONS)): instrument_id = 0
+
+    instrument_var = tkinter.StringVar(helpLf)
+    instrument_var.set(OPTIONS[instrument_id]) # default value
+
+    instrumentOpt = tkinter.OptionMenu(helpLf, instrument_var, *OPTIONS)
+    instrumentOpt.grid(row=0, column=1, columnspan=1, sticky="WE", pady=3)
+
+    levelLbl = tkinter.Label(helpLf, text="Select level")
+    levelLbl.grid(row=1, column=2, sticky='E', padx=5, pady=2)
+
+    OPTIONS = ["Expert", "Hard", "Medium", "Easy"]
+
+    level_var = tkinter.StringVar(helpLf)
+    level_var.set(OPTIONS[C3toolbox.array_levels_id[curlevel]]) # default value
+
+    levelOpt = tkinter.OptionMenu(helpLf, level_var, *OPTIONS)
+    levelOpt.grid(row=0, column=2, columnspan=1, sticky="WE", pady=3)
+
+    allBtn = tkinter.Button(helpLf, text="Simplify all", command= lambda: execute(0)) 
+    allBtn.grid(row=0, column=3, rowspan=1, sticky="WE", padx=5, pady=2)
+
+    selBtn = tkinter.Button(helpLf, text="Simplify selected", command= lambda: execute(1)) 
+    selBtn.grid(row=1, column=3, rowspan=1, sticky="WE", padx=5, pady=2)
+
+    logo = tkinter.Frame(form, bg="#000")
+    logo.grid(row=3, column=0, columnspan=10, sticky='WE', \
+                 padx=0, pady=0, ipadx=0, ipady=0)
+
+    path = os.path.join( sys.path[0], "banner.gif" )
+    img = tkinter.PhotoImage(file=path)
+    imageLbl = tkinter.Label(logo, image = img, borderwidth=0)
+    imageLbl.grid(row=0, column=0, rowspan=2, sticky='E', padx=0, pady=0)
+
+    # Open window center screen
+    imageLbl.image = img
+    C3toolbox.center_on_screen(form)
+    
+
+if __name__ == '__main__':
+    launch()
+    #C3toolbox.startup()
+    #C3toolbox.simplify_roll('PART DRUMS', 'e', 0)
+
