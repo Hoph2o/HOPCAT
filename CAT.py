@@ -7,7 +7,7 @@ import tkinter as Tk
 import traceback
 sys.argv = ["Main"]
 
-APP_TITLE = "HOPCAT-ROG v0.4"
+APP_TITLE = "HOPCAT v0.4"
 
 # ======================================================================
 #                     Auto-import tools from ./scripts
