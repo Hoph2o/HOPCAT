@@ -5,6 +5,8 @@ https://github.com/abefacciazzi/CAT
 
 https://github.com/raphaelgoulart/CAT-YARG
 
+Thank you to sanjay for converting CAT to python3 and fixing all my bugs :)
+
 # New Features
 - create_ini - A Moonscraper-esque metadate input window to generate a song.ini file directly from REAPER.
 - midi_note_selector - Based off a ReaPack script by Lokasenna. Replaces CAT function like "Reduce 2x" and "Reduce to triple hits"
